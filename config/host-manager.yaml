@@ -1,0 +1,17 @@
+rest:
+  server:
+    host: localhost
+    port: 8080
+    swaggerUrl: /swagger
+    metricsUrl: /metrics
+    readTimeoutSec: 5
+    writeTimeoutSec: 10
+    shutdownTimeoutSec: 20
+logging:
+  level: 6 # 6:trace
+  timestampFormat: 15.04.05 02.01.2006.000000000
+  default: false
+mapping:
+  prefix: host_
+  namespace: default
+  configPath: config/kube.conf
