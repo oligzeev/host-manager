@@ -31,7 +31,7 @@ func main() {
 	// TODO add tests
 	// TODO add benchmarks
 	// TODO read config prefix from env
-	// TODO add openshift's routes reader
+	// TODO add openshift's routes watcher
 	initLogger(cfg.Logging)
 
 	mappingService := initMappingService(cfg.Mapping)
