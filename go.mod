@@ -9,13 +9,18 @@ require (
 	github.com/go-openapi/swag v0.19.9 // indirect
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
+	github.com/google/btree v1.0.0 // indirect
+	github.com/googleapis/gnostic v0.5.1 // indirect
+	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
+	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
-	github.com/openshift/api v0.0.0-20200312145924-779a333deb13 // indirect
+	github.com/openshift/api v0.0.0-20200312145924-779a333deb13
 	github.com/openshift/client-go v0.0.0-20180830153425-431ec9a26e50
+	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14

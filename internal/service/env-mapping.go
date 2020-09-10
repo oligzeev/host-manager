@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/oligzeev/host-manager/internal/domain"
 	log "github.com/sirupsen/logrus"
-	"os"
 	"strings"
 )
 
@@ -17,11 +16,11 @@ type EnvMappingService struct {
 // Instantiate host mapping service with specific prefix
 // There's no separator for prefix so you have to specify one if required (e.g. "someprefix_")
 // Prefix and all keys will be fixed with upper case
-func NewEnvMappingService(cfg domain.MappingConfig) *EnvMappingService {
+func NewEnvMappingService(cfg domain.MappingConfig, envs []string) *EnvMappingService {
 	prefix := strings.ToLower(cfg.Prefix)
 	hostMap := make(map[string]domain.Mapping)
 	var hosts []domain.Mapping
-	for _, env := range os.Environ() {
+	for _, env := range envs {
 		pair := strings.SplitN(env, "=", 2)
 		key := strings.ToLower(pair[0])
 		value := pair[1]

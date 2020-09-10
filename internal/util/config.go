@@ -31,3 +31,11 @@ func ReadConfig(yamlFileName, envPrefix string) (*domain.ApplicationConfig, erro
 	}
 	return &config, nil
 }
+
+func GetEnv(env, defaultValue string) string {
+	value := os.Getenv(env)
+	if len(value) == 0 {
+		value = defaultValue
+	}
+	return value
+}
