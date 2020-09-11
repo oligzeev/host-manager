@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+const (
+	ParamId = "id"
+)
+
 type MappingRestHandler struct {
 	mappingService domain.MappingService
 }

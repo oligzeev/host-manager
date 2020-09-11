@@ -28,8 +28,13 @@ type MappingConfig struct {
 	ConfigPath string `yaml:"configPath"`
 }
 
+type TracingConfig struct {
+	ServiceName string `yaml:"serviceName"`
+}
+
 type ApplicationConfig struct {
 	Rest    RestConfig    `yaml:"rest"`
 	Logging LoggingConfig `yaml:"logging"`
 	Mapping MappingConfig `yaml:"mapping"`
+	Tracing TracingConfig `yaml:"tracing"`
 }

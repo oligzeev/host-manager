@@ -110,7 +110,10 @@ func (k OpenshiftMappingService) updateEvent(oldObj, newObj interface{}) {
 }
 
 func (k OpenshiftMappingService) StopInformer() {
+	const op = "OpenshiftMappingService.StopInformer"
+
 	close(k.informerStop)
+	log.Tracef("%s: finished", op)
 }
 
 // Returns all host mappings

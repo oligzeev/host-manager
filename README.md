@@ -12,6 +12,10 @@
 * `oc new-app --docker-image 172.30.171.98:5000/openshift/host-manager:1 --name host-manager`
 * `oc expose dc/host-manager --port=8080`
 
+#### Tracing
+* Start all-in-one jaeger: `docker run --name jgr -p5775:5775/udp -p6831:6831/udp -p16686:16686 -d jaegertracing/all-in-one:latest`
+* Go to: `http://localhost:16686/search`
+
 #### Swagger
 [Swaggo/swag][swaggo] is used to generate swagger.
 

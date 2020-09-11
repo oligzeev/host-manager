@@ -15,3 +15,5 @@ mapping:
   prefix: host_
   namespace: default
   configPath: config/kube-config.yaml
+tracing:
+  serviceName: host-manager
