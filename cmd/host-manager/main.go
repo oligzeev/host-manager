@@ -6,7 +6,7 @@ import (
 	"github.com/oligzeev/host-manager/internal/logging"
 	"github.com/oligzeev/host-manager/internal/metric"
 	"github.com/oligzeev/host-manager/internal/rest"
-	"github.com/oligzeev/host-manager/internal/service"
+	"github.com/oligzeev/host-manager/internal/service/mapping"
 	"github.com/oligzeev/host-manager/internal/tracing"
 	"github.com/oligzeev/host-manager/internal/util"
 	log "github.com/sirupsen/logrus"
@@ -87,15 +87,15 @@ func main() {
 	}
 }
 
-func initMappingService(cfg domain.MappingConfig) (domain.MappingService, *service.OpenshiftMappingService) {
-	envService := service.NewEnvMappingService(cfg, os.Environ())
-	osService, err := service.NewOpenshiftMappingService(cfg)
+func initMappingService(cfg domain.MappingConfig) (domain.MappingService, *mapping.OpenshiftMappingService) {
+	envService := mapping.NewEnvMappingService(cfg, os.Environ())
+	osService, err := mapping.NewOpenshiftMappingService(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
-	aggService := service.NewAggMappingService(envService, osService)
-	metricService := service.NewMetricMappingService(aggService)
-	return service.NewTracingMappingService(metricService), osService
+	aggService := mapping.NewAggMappingService(envService, osService)
+	metricService := mapping.NewMetricMappingService(aggService)
+	return mapping.NewTracingMappingService(metricService), osService
 }
 
 func initConfig() *domain.ApplicationConfig {
