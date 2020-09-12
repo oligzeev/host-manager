@@ -1,6 +1,21 @@
+#### Introduction
+This simple application introduces the simplest usages of a couple of common libraries.
+The application registers hosts and provide get-all and get-by-id operations via rest.
+There're 2 ways to register a host into the application: environment variables and openshift's routes
+
+To register a host via environment variables just add variable with preconfigured prefix.
+To register a host via openshift's routes:
+* If you start application outside openshift cluster just update config/kube-config.yaml or provide your config-file via ENV_CONFIG_PATH
+* If you start application inside openshift cluster you have to provide a namespace (mapping.namespace configuration value)
+
+**Note**: all default configuration variables placed in config/host-manager.yaml (could be changed via ENV_CONFIG_PATH)
+
 #### Docker
-* `docker build -t host-manager -f build/docker/Dockerfile .`
-* `docker tag host-manager:latest 172.30.171.98:5000/openshift/host-manager:1`
+There're 2 docker-files (see build directory):
+* docker1 - single-stage docker-file
+* docker2 - multi-stage docker-file
+
+To build an image just: `docker build -t host-manager -f build/dockerX/Dockerfile .`
 
 #### OpenShift
 * `oc policy add-role-to-user registry-viewer admin`
