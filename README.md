@@ -18,6 +18,7 @@ There're 2 docker-files (see build directory):
 To build an image just: `docker build -t host-manager -f build/dockerX/Dockerfile .`
 
 #### OpenShift
+
 * `oc policy add-role-to-user registry-viewer admin`
 * `oc policy add-role-to-user registry-editor admin`
 * `oc get svc -n default docker-registry`
