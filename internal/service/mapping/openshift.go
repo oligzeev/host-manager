@@ -47,7 +47,8 @@ func NewOpenshiftMappingService(cfg domain.MappingConfig) (*OpenshiftMappingServ
 		key := strings.ToLower(route.Name)
 		hosts[key] = domain.Mapping{Id: key, Host: route.Spec.Host}
 	}
-	return &OpenshiftMappingService{hosts: hosts,
+	return &OpenshiftMappingService{
+		hosts:        hosts,
 		client:       client,
 		informerStop: make(chan struct{}),
 		mutex:        sync.RWMutex{},

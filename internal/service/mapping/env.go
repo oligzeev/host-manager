@@ -8,7 +8,6 @@ import (
 )
 
 type EnvMappingService struct {
-	prefix  string
 	hosts   []domain.Mapping
 	hostMap map[string]domain.Mapping
 }
@@ -31,7 +30,7 @@ func NewEnvMappingService(cfg domain.MappingConfig, envs []string) *EnvMappingSe
 			hosts = append(hosts, mapping)
 		}
 	}
-	return &EnvMappingService{prefix: prefix, hostMap: hostMap, hosts: hosts}
+	return &EnvMappingService{hostMap: hostMap, hosts: hosts}
 }
 
 // Returns all host mappings

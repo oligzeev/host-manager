@@ -33,9 +33,6 @@ const (
 	defaultConfigPrefix = "app"
 )
 
-// TODO add golangci-lint
-// TODO add benchmarks
-
 // Defaults are in config/host-manager.yaml (could be changed via ENV_CONFIG_PATH)
 func main() {
 	// Initialize error group & signal receiver
