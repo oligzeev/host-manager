@@ -31,6 +31,12 @@ const (
 	defaultConfigPrefix = "app"
 )
 
+// TODO add golangci-lint
+// TODO add profiler
+// TODO add tests
+// TODO add benchmarks
+
+// Defaults are in config/host-manager.yaml (could be changed via ENV_CONFIG_PATH)
 func main() {
 	// Initialize error group & signal receiver
 	ctx, done := context.WithCancel(context.Background())
@@ -41,14 +47,6 @@ func main() {
 
 	// Initialize configuration
 	cfg := initConfig()
-
-	// TODO add golangci-lint
-	// TODO add profiler
-	// TODO add tests
-	// TODO add benchmarks
-
-	// TODO add metrics
-	// TODO add opentracing
 
 	// Initialize logging
 	initLogger(cfg.Logging)
@@ -87,6 +85,8 @@ func main() {
 	}
 }
 
+// Initialize mapping service with tracing and prometheus decorators.
+// Values from env-variables and openshift's routes are merged.
 func initMappingService(cfg domain.MappingConfig) (domain.MappingService, *mapping.OpenshiftMappingService) {
 	envService := mapping.NewEnvMappingService(cfg, os.Environ())
 	osService, err := mapping.NewOpenshiftMappingService(cfg)
@@ -98,6 +98,9 @@ func initMappingService(cfg domain.MappingConfig) (domain.MappingService, *mappi
 	return mapping.NewTracingMappingService(metricService), osService
 }
 
+// Initialize configuration via merging env-variables and config-file.
+// ENV_PREFIX - prefix for env-variables
+// ENV_CONFIG_PATH - path to config-file
 func initConfig() *domain.ApplicationConfig {
 	configPath := util.GetEnv(envConfigPath, defaultConfigPath)
 	prefix := util.GetEnv(envConfigPrefix, defaultConfigPrefix)
@@ -108,6 +111,7 @@ func initConfig() *domain.ApplicationConfig {
 	return cfg
 }
 
+// Initialize logrus logger. Default formatter could be changed via configuration
 func initLogger(cfg domain.LoggingConfig) {
 	if cfg.Default {
 		log.SetFormatter(&log.TextFormatter{
@@ -122,6 +126,7 @@ func initLogger(cfg domain.LoggingConfig) {
 	log.SetLevel(log.Level(cfg.Level))
 }
 
+// Initialize opentracing and set global tracer
 func initTracing(cfg domain.TracingConfig) (opentracing.Tracer, io.Closer) {
 	tracingCfg := jaegerconf.Configuration{
 		ServiceName: cfg.ServiceName,
@@ -141,6 +146,7 @@ func initTracing(cfg domain.TracingConfig) (opentracing.Tracer, io.Closer) {
 	return tracer, closer
 }
 
+// Initialize rest server with application, tracing, swagger, prometheus handlers
 func initRestServer(cfg domain.ServerRestConfig, handlers []domain.RestHandler) *rest.Server {
 	restServer := rest.NewServer(cfg, handlers)
 	router := restServer.Router()

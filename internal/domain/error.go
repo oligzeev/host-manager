@@ -63,6 +63,13 @@ func ECode(err error) ErrCode {
 	return ErrInternal
 }
 
+func EOp(err error) ErrOp {
+	if e, ok := err.(*Error); ok {
+		return e.Op
+	}
+	return ""
+}
+
 func EOps(err error) []ErrOp {
 	if e, ok := err.(*Error); ok {
 		result := []ErrOp{e.Op}

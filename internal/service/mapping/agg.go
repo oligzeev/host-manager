@@ -30,8 +30,12 @@ func (s AggMappingService) GetAll(ctx context.Context, result *[]domain.Mapping)
 		return err
 	}
 	var hosts []domain.Mapping
-	hosts = append(hosts, envHosts...)
-	hosts = append(hosts, openshiftHosts...)
+	if len(envHosts) > 0 {
+		hosts = append(hosts, envHosts...)
+	}
+	if len(openshiftHosts) > 0 {
+		hosts = append(hosts, openshiftHosts...)
+	}
 	*result = hosts
 	return nil
 }

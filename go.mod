@@ -3,7 +3,6 @@ module github.com/oligzeev/host-manager
 go 1.14
 
 require (
-    github.com/prometheus/client_golang v1.5.1
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
 	github.com/gin-gonic/gin v1.6.3
@@ -23,8 +22,10 @@ require (
 	github.com/openshift/client-go v0.0.0-20180830153425-431ec9a26e50
 	github.com/opentracing/opentracing-go v1.1.0
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
+	github.com/prometheus/client_golang v1.5.1
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stretchr/testify v1.5.1
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.7

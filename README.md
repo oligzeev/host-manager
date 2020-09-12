@@ -24,6 +24,10 @@ To generate swagger:
 * `<GO_PATH>/bin/swag init --dir ./ --generalInfo ./cmd/host-manager/main.go --output ./api/swagger`
 * `http://<HOST>:<PORT>/swagger/index.html`
 
+#### Testing
+* `go test -coverprofile=out/test.html ./internal/service/mapping/`
+* `go tool cover -html=out/test.html`
+
 #### Configuration
 [Envconfig][envconfig] is used to read application configuration
 
