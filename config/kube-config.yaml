@@ -10,7 +10,7 @@ clusters:
 users:
 - name: admin/master-lab1-example-com:8443
   user:
-    token: i5aByeq2eIuqQBc5UMTz-g-q6rznsgm-XdFkFZFa4Pg
+    token: A3Dqcpa9Lrqwtb-w-kuVAhJQpouU-CyRJCk0qP3lI_Y
 contexts:
 - context:
     cluster: master-lab1-example-com:8443

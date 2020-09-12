@@ -20,6 +20,8 @@ import (
 	"github.com/opentracing/opentracing-go"
 	jaegerconf "github.com/uber/jaeger-client-go/config"
 
+	"github.com/gin-contrib/pprof"
+
 	_ "github.com/oligzeev/host-manager/api/swagger"
 )
 
@@ -32,8 +34,6 @@ const (
 )
 
 // TODO add golangci-lint
-// TODO add profiler
-// TODO add tests
 // TODO add benchmarks
 
 // Defaults are in config/host-manager.yaml (could be changed via ENV_CONFIG_PATH)
@@ -159,6 +159,9 @@ func initRestServer(cfg domain.ServerRestConfig, handlers []domain.RestHandler) 
 
 	// Prometheus handler initialization
 	router.GET(cfg.MetricsUrl, metric.PrometheusHandler())
+
+	// PProf handler initialization
+	pprof.Register(router)
 
 	return restServer
 }

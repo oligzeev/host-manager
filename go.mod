@@ -3,6 +3,7 @@ module github.com/oligzeev/host-manager
 go 1.14
 
 require (
+    github.com/gin-contrib/pprof v1.3.0
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
 	github.com/gin-gonic/gin v1.6.3

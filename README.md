@@ -31,5 +31,9 @@ To generate swagger:
 #### Configuration
 [Envconfig][envconfig] is used to read application configuration
 
+#### PProf
+* `https://github.com/gin-contrib/pprof`
+* `go tool pprof http://localhost:8080/debug/pprof/profile?seconds=5`
+
 [envconfig]: https://github.com/kelseyhightower/envconfig
 [swaggo]: https://github.com/swaggo/swag
