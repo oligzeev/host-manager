@@ -49,12 +49,12 @@ func (s Server) Stop(ctx context.Context) error {
 	const op = "RestServer.Stop"
 
 	log.Tracef("%s: in progress", op)
-	ctx, cancel := context.WithTimeout(context.Background(), s.cfg.ShutdownTimeoutSec*time.Second)
+	timeoutCtx, cancel := context.WithTimeout(ctx, s.cfg.ShutdownTimeoutSec*time.Second)
 	defer cancel()
 
-	if err := s.httpServer.Shutdown(ctx); err != nil {
+	if err := s.httpServer.Shutdown(timeoutCtx); err != nil {
 		return domain.E(op, err)
 	}
 	log.Tracef("%s: finished", op)
-	return ctx.Err()
+	return timeoutCtx.Err()
 }

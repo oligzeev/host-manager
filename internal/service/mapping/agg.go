@@ -11,7 +11,10 @@ type AggMappingService struct {
 	openshiftMappingService domain.MappingService
 }
 
-func NewAggMappingService(envMappingService domain.MappingService, openshiftMappingService domain.MappingService) *AggMappingService {
+func NewAggMappingService(
+	envMappingService domain.MappingService,
+	openshiftMappingService domain.MappingService,
+) *AggMappingService {
 	return &AggMappingService{envMappingService: envMappingService, openshiftMappingService: openshiftMappingService}
 }
 

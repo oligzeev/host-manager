@@ -57,6 +57,7 @@ func (h MappingRestHandler) getMappings(c *gin.Context) {
 func (h MappingRestHandler) getMappingById(c *gin.Context) {
 	id := c.Param(ParamId)
 	var result domain.Mapping
+
 	if err := h.mappingService.GetById(c.Request.Context(), id, &result); err != nil {
 		log.Error(err)
 		if domain.ECode(err) == domain.ErrNotFound {

@@ -42,18 +42,24 @@ func Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		spanContext, err := tracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(c.Request.Header))
 		var span opentracing.Span
+
 		if err != nil {
 			span = tracer.StartSpan(c.Request.RequestURI)
 		} else {
 			span = tracer.StartSpan(c.Request.Method+" "+c.Request.RequestURI, ext.RPCServerOption(spanContext))
 		}
+
 		defer span.Finish()
 		c.Request = c.Request.WithContext(opentracing.ContextWithSpan(c.Request.Context(), span))
 		c.Next()
 	}
 }
 
-func StartContextFromSpanStr(ctx context.Context, operationName string, spanStr string) (opentracing.Span, context.Context, error) {
+func StartContextFromSpanStr(
+	ctx context.Context,
+	operationName string,
+	spanStr string,
+) (opentracing.Span, context.Context, error) {
 	spanCtx, err := jaeger.ContextFromString(spanStr)
 	if err != nil {
 		return nil, nil, err
@@ -76,7 +82,11 @@ func FollowNewSpanFromContext(span opentracing.Span, operationName string) (open
 	return FollowSpanFromContext(spanCtx, operationName)
 }
 
-func FollowSpanFromContext(ctx context.Context, operationName string, opts ...opentracing.StartSpanOption) (opentracing.Span, context.Context) {
+func FollowSpanFromContext(
+	ctx context.Context,
+	operationName string,
+	opts ...opentracing.StartSpanOption,
+) (opentracing.Span, context.Context) {
 	if parentSpan := opentracing.SpanFromContext(ctx); parentSpan != nil {
 		opts = append(opts, opentracing.FollowsFrom(parentSpan.Context()))
 	}

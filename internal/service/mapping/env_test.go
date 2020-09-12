@@ -22,7 +22,7 @@ func TestNewEnvMappingService(t *testing.T) {
 		"Key6Test_=Val6",
 	})
 	var result []domain.Mapping
-	err := service.GetAll(nil, &result)
+	err := service.GetAll(testCtx, &result)
 	assert.Nil(err)
 	assert.Equal(3, len(result))
 	assert.True(containsMapping(result, domain.Mapping{Id: "key1", Host: "val1"}))

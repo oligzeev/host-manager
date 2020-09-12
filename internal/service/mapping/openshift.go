@@ -55,7 +55,7 @@ func NewOpenshiftMappingService(cfg domain.MappingConfig) (*OpenshiftMappingServ
 	}, nil
 }
 
-func (k OpenshiftMappingService) StartInformer() {
+func (k *OpenshiftMappingService) StartInformer() {
 	informerFactory := routeInformers.NewSharedInformerFactoryWithOptions(k.client, 0, /*30 * time.Second*/
 		routeInformers.WithNamespace(k.namespace))
 	informer := informerFactory.Route().V1().Routes().Informer()
@@ -67,7 +67,7 @@ func (k OpenshiftMappingService) StartInformer() {
 	informerFactory.Start(k.informerStop)
 }
 
-func (k OpenshiftMappingService) addEvent(obj interface{}) {
+func (k *OpenshiftMappingService) addEvent(obj interface{}) {
 	routeObj := obj.(*v1.Route)
 	name := strings.ToLower(routeObj.Name)
 	host := routeObj.Spec.Host
@@ -80,7 +80,7 @@ func (k OpenshiftMappingService) addEvent(obj interface{}) {
 	k.mutex.Unlock()
 }
 
-func (k OpenshiftMappingService) deleteEvent(obj interface{}) {
+func (k *OpenshiftMappingService) deleteEvent(obj interface{}) {
 	routeObj := obj.(*v1.Route)
 	name := strings.ToLower(routeObj.Name)
 
@@ -92,7 +92,7 @@ func (k OpenshiftMappingService) deleteEvent(obj interface{}) {
 	k.mutex.Unlock()
 }
 
-func (k OpenshiftMappingService) updateEvent(oldObj, newObj interface{}) {
+func (k *OpenshiftMappingService) updateEvent(oldObj, newObj interface{}) {
 	oldRouteObj := oldObj.(*v1.Route)
 	oldHost := oldRouteObj.Spec.Host
 	newRouteObj := newObj.(*v1.Route)
@@ -109,7 +109,7 @@ func (k OpenshiftMappingService) updateEvent(oldObj, newObj interface{}) {
 	}
 }
 
-func (k OpenshiftMappingService) StopInformer() {
+func (k *OpenshiftMappingService) StopInformer() {
 	const op = "OpenshiftMappingService.StopInformer"
 
 	close(k.informerStop)
@@ -117,7 +117,7 @@ func (k OpenshiftMappingService) StopInformer() {
 }
 
 // Returns all host mappings
-func (k OpenshiftMappingService) GetAll(_ context.Context, result *[]domain.Mapping) error {
+func (k *OpenshiftMappingService) GetAll(_ context.Context, result *[]domain.Mapping) error {
 	const op = "OpenshiftMappingService.GetAll"
 	log.Tracef("%s", op)
 
@@ -134,7 +134,7 @@ func (k OpenshiftMappingService) GetAll(_ context.Context, result *[]domain.Mapp
 
 // Returns host mapping by id
 // Id have to be without prefix
-func (k OpenshiftMappingService) GetById(_ context.Context, id string, result *domain.Mapping) error {
+func (k *OpenshiftMappingService) GetById(_ context.Context, id string, result *domain.Mapping) error {
 	const op = "OpenshiftMappingService.GetById"
 	key := strings.ToLower(id)
 	log.Tracef("%s: %s", op, key)
