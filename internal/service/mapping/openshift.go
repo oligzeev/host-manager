@@ -57,6 +57,8 @@ func NewOpenshiftMappingService(cfg domain.MappingConfig) (*OpenshiftMappingServ
 }
 
 func (k *OpenshiftMappingService) StartInformer() {
+	const op = "OpenshiftMappingService.StartInformer"
+
 	informerFactory := routeInformers.NewSharedInformerFactoryWithOptions(k.client, 0, /*30 * time.Second*/
 		routeInformers.WithNamespace(k.namespace))
 	informer := informerFactory.Route().V1().Routes().Informer()
@@ -66,6 +68,7 @@ func (k *OpenshiftMappingService) StartInformer() {
 		UpdateFunc: k.updateEvent,
 	})
 	informerFactory.Start(k.informerStop)
+	log.Infof("%s: done", op)
 }
 
 func (k *OpenshiftMappingService) addEvent(obj interface{}) {
@@ -114,7 +117,7 @@ func (k *OpenshiftMappingService) StopInformer() {
 	const op = "OpenshiftMappingService.StopInformer"
 
 	close(k.informerStop)
-	log.Tracef("%s: finished", op)
+	log.Infof("%s: done", op)
 }
 
 // Returns all host mappings

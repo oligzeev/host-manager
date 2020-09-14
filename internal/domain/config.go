@@ -30,8 +30,7 @@ type MappingConfig struct {
 }
 
 type TracingConfig struct {
-	ServiceName       string `yaml:"serviceName"`
-	CollectorEndpoint string `yaml:"collectorEndpoint"`
+	ServiceName string `yaml:"serviceName"`
 }
 
 type ApplicationConfig struct {

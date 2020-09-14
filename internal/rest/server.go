@@ -40,24 +40,24 @@ func (s Server) Router() *gin.Engine {
 func (s Server) Start(ctx context.Context) error {
 	const op = "RestServer.Start"
 
-	log.Tracef("%s: %s", op, s.httpServer.Addr)
+	log.Infof("%s: %s", op, s.httpServer.Addr)
 	if err := s.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return domain.E(op, err)
 	}
-	log.Tracef("%s: exit", op)
+	log.Infof("%s: exit", op)
 	return ctx.Err()
 }
 
 func (s Server) Stop(ctx context.Context) error {
 	const op = "RestServer.Stop"
 
-	log.Tracef("%s: in progress", op)
+	log.Infof("%s: in progress", op)
 	timeoutCtx, cancel := context.WithTimeout(ctx, s.cfg.ShutdownTimeoutSec*time.Second)
 	defer cancel()
 
 	if err := s.httpServer.Shutdown(timeoutCtx); err != nil {
 		return domain.E(op, err)
 	}
-	log.Tracef("%s: finished", op)
+	log.Infof("%s: finished", op)
 	return timeoutCtx.Err()
 }

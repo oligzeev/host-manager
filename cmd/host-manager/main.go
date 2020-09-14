@@ -140,8 +140,7 @@ func initTracing(cfg domain.TracingConfig) (opentracing.Tracer, io.Closer) {
 			Param: 1,
 		},
 		Reporter: &jaegerconf.ReporterConfig{
-			LogSpans:          true,
-			CollectorEndpoint: cfg.CollectorEndpoint,
+			LogSpans: true,
 		},
 	}
 	tracer, closer, err := tracingCfg.NewTracer()

@@ -9,13 +9,12 @@ rest:
     shutdownTimeoutSec: 20
     release: true
 logging:
-  level: 6 # 6:trace
+  level: 4 # ... 4:info, 5:debug, 6:trace
   timestampFormat: 15.04.05 02.01.2006.000000000
   default: false
 mapping:
-  prefix: app_host_
+  prefix: app_host_ # don't forget _ if required
   namespace:
   configPath: config/kube-config.yaml
 tracing:
   serviceName: host-manager
-  collectorEndpoint:

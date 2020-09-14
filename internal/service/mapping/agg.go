@@ -41,6 +41,9 @@ func (s AggMappingService) GetAll(ctx context.Context, result *[]domain.Mapping)
 	if s.openshiftMappingService != nil && len(openshiftHosts) > 0 {
 		hosts = append(hosts, openshiftHosts...)
 	}
+	if hosts == nil {
+		hosts = make([]domain.Mapping, 0)
+	}
 	*result = hosts
 	return nil
 }
