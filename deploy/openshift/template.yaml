@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: host-manager
+parameters:
+- displayName: Application Name
+  name: APP_NAME
+  value: "host-manager"
+  description: Application name for objects
+- displayName: Label
+  name: LABEL
+  value: "host-manager"
+  description: Application label for objects
+- displayName: Port
+  name: PORT
+  required: true
+  description: Port for the rest server
+- displayName: Hosts Namespace
+  name: NAMESPACE
+  description: Namespace to watch routes
+- displayName: Image
+  name: IMAGE
+  required: true
+  description: Image of the host-manager
+- displayName: Service Account
+  name: SERVICE_ACCOUNT
+  required: true
+  description: Service account with enough grants to read namespace
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${LABEL}
+    name: ${APP_NAME}
+  spec:
+    ports:
+    - port: ${PORT}
+      protocol: TCP
+      targetPort: ${{PORT}}
+    selector:
+      app: ${LABEL}
+      deploymentconfig: ${APP_NAME}
+    type: ClusterIP
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${LABEL}
+    name: ${APP_NAME}
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: ${LABEL}
+      deploymentconfig: ${APP_NAME}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: ${LABEL}
+          deploymentconfig: ${APP_NAME}
+      spec:
+        containers:
+        - env:
+          - name: APP_MAPPING_NAMESPACE
+            value: ${NAMESPACE}
+          image: ${IMAGE}
+          imagePullPolicy: IfNotPresent
+          name: ${APP_NAME}
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: ${SERVICE_ACCOUNT}
+        serviceAccountName: ${SERVICE_ACCOUNT}
+        terminationGracePeriodSeconds: 30
+    triggers:
+    - type: ConfigChange

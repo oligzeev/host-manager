@@ -36,6 +36,13 @@ To create new application:
 * To add a host via environment variable: `oc set env dc/host-manager APP_HOST_HOST1=host1:8080`
 * Add namespace scanning if required: `oc set env dc/host-manager APP_MAPPING_NAMESPACE=<NAMESPACE>`
 
+To create/process the template:
+* Create granted service account:
+  * `oc create sa <SERVICE_ACCOUNT>`
+  * `oc adm policy add-role-to-user view -z <SERVICE_ACCOUNT>` ('view' role for instance only)
+* `oc create deploy/openshift/templace.yaml`
+* `oc process host-manager NAMESPACE=<NAMESPACE> IMAGE=<IMAGE> PORT=<PORT> SERVICE_ACCOUNT=<SERVICE_ACCOUNT> | oc create -f -`
+
 #### Tracing
 For development purposes it's easy to use all-in-one jaeger version: 
 * Start all-in-one jaeger: `docker run --name jgr -p5775:5775/udp -p6831:6831/udp -p16686:16686 -d jaegertracing/all-in-one:latest`
