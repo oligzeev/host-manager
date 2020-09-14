@@ -11,7 +11,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main /app/cmd/hos
 FROM alpine:latest
 RUN mkdir -p /app/config
 COPY --from=builder /app/config/host-manager.yaml /app/config
-COPY --from=builder /app/config/kube.conf /app/config
+COPY --from=builder /app/config/kube-config.yaml /app/config
 COPY --from=builder /app/main /app
 WORKDIR /app
 CMD ["/app/main"]
