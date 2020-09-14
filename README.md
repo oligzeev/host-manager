@@ -27,8 +27,14 @@ To push the image to internal openshift's repository:
 
 To create new application: 
 * Create new deployment configuration: `oc new-app --docker-image <REGISTRY-IP>:5000/openshift/host-manager:<VERSION> --name host-manager`
-* Add service account to deployment configuration which is has grants to read routes in the namespace
+* Add service account to deployment configuration which is has grants to read routes in the namespace:
+  * `oc create sa host-manager`
+  * `oc adm policy add-role-to-user view -z host-manager`
+  * `oc patch dc/host-manager -p '{"spec":{"template":{"spec":{"serviceAccount":"host-manager"}}}}'`
 * Create new service: `oc expose dc/host-manager --port=8080`
+* Create new route: `oc expose svc/host-manager`
+* To add a host via environment variable: `oc set env dc/host-manager APP_HOST_HOST1=host1:8080`
+* Add namespace scanning if required: `oc set env dc/host-manager APP_MAPPING_NAMESPACE=<NAMESPACE>`
 
 #### Tracing
 For development purposes it's easy to use all-in-one jaeger version: 
