@@ -17,6 +17,9 @@ type Server struct {
 }
 
 func NewServer(cfg domain.ServerRestConfig, handlers []domain.RestHandler) *Server {
+	if cfg.Release {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	router := gin.New()
 	for _, handler := range handlers {
 		handler.Register(router)

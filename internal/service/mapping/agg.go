@@ -28,15 +28,17 @@ func (s AggMappingService) GetAll(ctx context.Context, result *[]domain.Mapping)
 	if err != nil {
 		return err
 	}
-	err = s.openshiftMappingService.GetAll(ctx, &openshiftHosts)
-	if err != nil {
-		return err
+	if s.openshiftMappingService != nil {
+		err = s.openshiftMappingService.GetAll(ctx, &openshiftHosts)
+		if err != nil {
+			return err
+		}
 	}
 	var hosts []domain.Mapping
 	if len(envHosts) > 0 {
 		hosts = append(hosts, envHosts...)
 	}
-	if len(openshiftHosts) > 0 {
+	if s.openshiftMappingService != nil && len(openshiftHosts) > 0 {
 		hosts = append(hosts, openshiftHosts...)
 	}
 	*result = hosts
@@ -49,7 +51,7 @@ func (s AggMappingService) GetById(ctx context.Context, id string, result *domai
 	log.Tracef("%s", op)
 	var err error
 	err = s.envMappingService.GetById(ctx, id, result)
-	if err != nil && domain.ECode(err) == domain.ErrNotFound {
+	if err != nil && domain.ECode(err) == domain.ErrNotFound && s.openshiftMappingService != nil {
 		err = s.openshiftMappingService.GetById(ctx, id, result)
 		if err == nil {
 			return nil

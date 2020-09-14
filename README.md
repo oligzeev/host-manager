@@ -18,17 +18,20 @@ There're 2 docker-files (see build directory):
 To build an image just: `docker build -t host-manager -f build/dockerX/Dockerfile .`
 
 #### OpenShift
+To push the image to internal openshift's repository:
+* Provide to the user required grants: `oc policy add-role-to-user registry-viewer admin` and `oc policy add-role-to-user registry-editor admin`
+* Get current internal registry's ip address: `oc get svc -n default docker-registry`
+* Tag the image with current URL: `docker tag host-manager:latest <REGISTRY-IP>:5000/openshift/host-manager:<VERSION>`
+* Login to internal registry: `docker login -u admin -p $(oc whoami -t) <REGISTRY-IP>:5000`
+* Push the image: `docker push <REGISTRY-IP>:5000/openshift/host-manager:<VERSION>`
 
-* `oc policy add-role-to-user registry-viewer admin`
-* `oc policy add-role-to-user registry-editor admin`
-* `oc get svc -n default docker-registry`
-* `docker tag host-manager:latest 172.30.171.98:5000/openshift/host-manager:1`
-* `docker login -u admin -p $(oc whoami -t) 172.30.171.98:5000`
-* `docker push 172.30.171.98:5000/openshift/host-manager:1`
-* `oc new-app --docker-image 172.30.171.98:5000/openshift/host-manager:1 --name host-manager`
-* `oc expose dc/host-manager --port=8080`
+To create new application: 
+* Create new deployment configuration: `oc new-app --docker-image <REGISTRY-IP>:5000/openshift/host-manager:<VERSION> --name host-manager`
+* Add service account to deployment configuration which is has grants to read routes in the namespace
+* Create new service: `oc expose dc/host-manager --port=8080`
 
 #### Tracing
+For development purposes it's easy to use all-in-one jaeger version: 
 * Start all-in-one jaeger: `docker run --name jgr -p5775:5775/udp -p6831:6831/udp -p16686:16686 -d jaegertracing/all-in-one:latest`
 * Go to: `http://localhost:16686/search`
 
@@ -45,7 +48,7 @@ To generate swagger:
 * `go tool cover -html=out/test.html`
 
 #### Configuration
-[Envconfig][envconfig] is used to read application configuration
+There's 2 options to configure application: [Envconfig][envconfig] and configuration file (config/host-manager.yaml by default) 
 
 #### PProf
 * `https://github.com/gin-contrib/pprof`

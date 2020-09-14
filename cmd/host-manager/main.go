@@ -53,15 +53,16 @@ func main() {
 	defer closer.Close()
 
 	// Initialize mapping services
-	mappingService, osMappingService := initMappingService(cfg.Mapping)
-	group.Go(func() error {
-		osMappingService.StartInformer()
-		return nil
-	})
-	group.Go(func() error {
-		<-ctx.Done()
-		osMappingService.StopInformer()
-		return nil
+	mappingService := initMappingService(cfg.Mapping, func(osMappingService *mapping.OpenshiftMappingService) {
+		group.Go(func() error {
+			osMappingService.StartInformer()
+			return nil
+		})
+		group.Go(func() error {
+			<-ctx.Done()
+			osMappingService.StopInformer()
+			return nil
+		})
 	})
 
 	// Initialize rest server
@@ -84,15 +85,22 @@ func main() {
 
 // Initialize mapping service with tracing and prometheus decorators.
 // Values from env-variables and openshift's routes are merged.
-func initMappingService(cfg domain.MappingConfig) (domain.MappingService, *mapping.OpenshiftMappingService) {
+func initMappingService(cfg domain.MappingConfig, initInformer func(osMappingService *mapping.OpenshiftMappingService)) domain.MappingService {
 	envService := mapping.NewEnvMappingService(cfg, os.Environ())
-	osService, err := mapping.NewOpenshiftMappingService(cfg)
-	if err != nil {
-		log.Fatal(err)
+	if cfg.Namespace != "" {
+		osService, err := mapping.NewOpenshiftMappingService(cfg)
+		if err != nil {
+			log.Fatal(err)
+		}
+		initInformer(osService)
+		return mapping.NewTracingMappingService(
+			mapping.NewMetricMappingService(
+				mapping.NewAggMappingService(envService, osService)))
+	} else {
+		return mapping.NewTracingMappingService(
+			mapping.NewMetricMappingService(
+				mapping.NewAggMappingService(envService, nil)))
 	}
-	aggService := mapping.NewAggMappingService(envService, osService)
-	metricService := mapping.NewMetricMappingService(aggService)
-	return mapping.NewTracingMappingService(metricService), osService
 }
 
 // Initialize configuration via merging env-variables and config-file.
@@ -132,7 +140,8 @@ func initTracing(cfg domain.TracingConfig) (opentracing.Tracer, io.Closer) {
 			Param: 1,
 		},
 		Reporter: &jaegerconf.ReporterConfig{
-			LogSpans: true,
+			LogSpans:          true,
+			CollectorEndpoint: cfg.CollectorEndpoint,
 		},
 	}
 	tracer, closer, err := tracingCfg.NewTracer()

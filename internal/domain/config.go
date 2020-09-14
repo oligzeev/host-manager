@@ -10,6 +10,7 @@ type ServerRestConfig struct {
 	ReadTimeoutSec     time.Duration `yaml:"readTimeoutSec"`
 	WriteTimeoutSec    time.Duration `yaml:"writeTimeoutSec"`
 	ShutdownTimeoutSec time.Duration `yaml:"shutdownTimeoutSec"`
+	Release            bool          `yaml:"release"`
 }
 
 type RestConfig struct {
@@ -29,7 +30,8 @@ type MappingConfig struct {
 }
 
 type TracingConfig struct {
-	ServiceName string `yaml:"serviceName"`
+	ServiceName       string `yaml:"serviceName"`
+	CollectorEndpoint string `yaml:"collectorEndpoint"`
 }
 
 type ApplicationConfig struct {
